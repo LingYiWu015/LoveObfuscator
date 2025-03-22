@@ -94,6 +94,14 @@ function generate() {
       behavior: 'smooth'
     });
   }
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'Enter') {
+    generate();
+  }
+});
+if ('ontouchstart' in window) {
+  document.getElementById('input').focus();
+}
 }
 
 function copyToClipboard() {
