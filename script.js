@@ -1,60 +1,61 @@
-function obfuscate(text, lang = 'python', style = 'basic') {
+
+function obfuscate(text, lang = 'python', style = 'basic', targetLang = 'python') {
   if (style === 'basic') {
-    return basicObfuscate(text, lang);
+    return basicObfuscate(text, lang, targetLang);
   } else if (style === 'random') {
-    return randomObfuscate(text, lang);
+    return randomObfuscate(text, lang, targetLang);
   } else if (style === 'advanced') {
-    return advancedObfuscate(text, lang);
+    return advancedObfuscate(text, lang, targetLang);
   }
   return 'Unsupported style';
 }
 
-function basicObfuscate(text, lang) {
-  if (lang === 'python') {
-    const arr = Array.from(text).map(c => c.charCodeAt(0));
+function basicObfuscate(text, lang, targetLang) {
+  const arr = Array.from(text).map(c => c.charCodeAt(0));
+  if (targetLang === 'python') {
     return `print(''.join(map(chr, ${JSON.stringify(arr)})))`;
   }
-  if (lang === 'js') {
-    const b64 = btoa(text);
-    return `eval(atob('${b64}'))`;
+  if (targetLang === 'js') {
+    return `eval(atob('${btoa(text)}'))`;
   }
-  if (lang === 'php') {
-    const arr = Array.from(text).map(c => c.charCodeAt(0));
+  if (targetLang === 'php') {
     return `<?php echo chr(${arr.join(').' + 'chr(')}); ?>`;
   }
-  if (lang === 'cpp') {
-    const arr = Array.from(text).map(c => `char(${c})`).join(' << ');
-    return `std::cout << ${arr};`;
+  if (targetLang === 'cpp') {
+    return `std::cout << ${arr.map(c => `char(${c})`).join(' << ')};`;
   }
-  return '// Unsupported language';
+  return 'Unsupported target language';
 }
 
-function randomObfuscate(text, lang) {
-  const randomStyle = Math.random() < 0.5 ? 'python' : 'js';
-  return basicObfuscate(text, randomStyle);
+function reverseLogicObfuscate(text) {
+  let reversed = text.split('').reverse().join('');
+  return `console.log("${reversed}")`;
+}
+
+function addRedundantCondition(text) {
+  return `if (true) { ${text} } else { console.log('Dead code'); }`;
+}
+
+function dynamicCodeObfuscate(text) {
+  let encoded = btoa(text);
+  return `eval(atob('${encoded}'))`;
 }
 
 function advancedObfuscate(text, lang) {
-  if (lang === 'php') {
-    const arr = Array.from(text).map(c => c.charCodeAt(0));
-    return `<?php echo chr(${arr.join(').' + 'chr(')}); ?>`;
-  }
-  if (lang === 'cpp') {
-    const arr = Array.from(text).map(c => `char(${c})`).join(' << ');
-    return `std::cout << ${arr};`;
-  }
-  return lang === 'js' ? `eval(atob('${btoa(text)}'))` : `exec("${text}")`;
+  let result = reverseLogicObfuscate(text);
+  result = addRedundantCondition(result);
+  return dynamicCodeObfuscate(result);
 }
 
 function generate() {
-  const feedback = document.getElementById("feedback");
-  feedback.innerText = '正在生成混淆代码...';
+  document.getElementById("loading").style.display = 'block';
   const text = document.getElementById("input").value;
   const lang = document.getElementById("lang").value;
+  const targetLang = document.getElementById("targetLang").value;
   const style = document.getElementById("style").value;
-  const result = obfuscate(text, lang, style);
+  const result = obfuscate(text, lang, style, targetLang);
   document.getElementById("output").innerText = result;
-  feedback.innerText = '混淆代码生成完毕！';
+  document.getElementById("loading").style.display = 'none';
 }
 
 function copyToClipboard() {

@@ -1,28 +1,56 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LoveObfuscator</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-  <div class="grid">
-    <textarea id="input" placeholder="说点什么..."></textarea>
-    <select id="lang">
-      <option value="python">Python</option>
-      <option value="js">JavaScript</option>
-      <option value="php">PHP</option>
-      <option value="cpp">C++</option>
-    </select>
-    <select id="style">
-      <option value="basic">基础混淆</option>
-      <option value="random">随机混淆</option>
-      <option value="advanced">高级混淆</option>
-    </select>
-    <button onclick="generate()">生成混淆代码</button>
+  <div class="container">
+    <div class="header">
+      <h1>LoveObfuscator</h1>
+      <p>跨语言混淆，爱你的方式也可以充满创意！</p>
+    </div>
+    <div class="inputs">
+      <textarea id="input" placeholder="请输入你想要混淆的文字..."></textarea>
+      <div class="language-options">
+        <label for="lang">源语言</label>
+        <select id="lang">
+          <option value="python">Python</option>
+          <option value="js">JavaScript</option>
+          <option value="php">PHP</option>
+          <option value="cpp">C++</option>
+          <option value="ruby">Ruby</option>
+          <option value="go">Go</option>
+        </select>
+        <label for="targetLang">目标语言</label>
+        <select id="targetLang">
+          <option value="python">Python</option>
+          <option value="js">JavaScript</option>
+          <option value="php">PHP</option>
+          <option value="cpp">C++</option>
+          <option value="ruby">Ruby</option>
+          <option value="go">Go</option>
+        </select>
+      </div>
+      <div class="style-options">
+        <label for="style">混淆风格</label>
+        <select id="style">
+          <option value="basic">基础混淆</option>
+          <option value="random">随机混淆</option>
+          <option value="advanced">高级混淆</option>
+        </select>
+      </div>
+      <button onclick="generate()">生成混淆代码</button>
+    </div>
+    <div id="loading" class="loading">生成中...</div>
+    <div id="output-container">
+      <pre id="output"></pre>
+    </div>
     <button onclick="copyToClipboard()">复制代码</button>
-    <pre id="output"></pre>
-    <div id="feedback">等待输入...</div>
   </div>
   <script src="script.js"></script>
 </body>
