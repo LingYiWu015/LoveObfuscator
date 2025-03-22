@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LoveObfuscator Mobile</title>
   <link rel="stylesheet" href="style.css">
@@ -8,13 +9,16 @@
 </head>
 <body>
   <div class="mobile-container">
-    <!-- 移动端专属布局 -->
     <div class="input-group">
-      <textarea id="mobile-input"></textarea>
+      <textarea id="mobile-input" placeholder="输入内容..."></textarea>
       <div class="quick-actions">
-        <button onclick="generateMobile()">✨ 生成</button>
-        <button onclick="copyMobile()">📋 复制</button>
+        <button onclick="generate()">✨ 生成</button>
+        <button onclick="copyToClipboard()">📋 复制</button>
       </div>
+    </div>
+    <div class="output-container">
+      <pre id="mobile-output"></pre>
+      <div id="mobile-feedback" class="status-message">准备就绪</div>
     </div>
   </div>
 </body>
