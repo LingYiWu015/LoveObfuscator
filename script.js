@@ -64,3 +64,62 @@ function copyToClipboard() {
     alert('代码已复制到剪贴板！');
   });
 }
+
+// 新增混淆类型
+const OBFUSCATION_METHODS = {
+  BASE64: 'base64',
+  HEX: 'hex',
+  UNICODE: 'unicode',
+  VARIABLE_MASK: 'variable-mask',
+  CONTROL_FLOW: 'control-flow'
+};
+
+// 加强的混淆核心方法
+function advancedObfuscate(text, lang) {
+  let result = '';
+  switch(lang) {
+    case 'python':
+      result = `exec(__import__('base64').b64decode('${btoa(text)}').decode())`;
+      break;
+    case 'js':
+      const hexStr = Array.from(text).map(c => 
+        `\\x${c.charCodeAt(0).toString(16).padStart(2, '0')}`
+      ).join('');
+      result = `eval("${hexStr}")`;
+      break;
+    case 'php':
+      result = `<?php eval(base64_decode('${btoa(text)}')); ?>`;
+      break;
+    case 'cpp':
+      const bytes = Array.from(text).map(c => 
+        `static_cast<char>(${c.charCodeAt(0)})`
+      ).join(' << ');
+      result = `std::cout << ${bytes};`;
+      break;
+  }
+  return applyAdvancedObfuscation(result, lang);
+}
+
+// 应用控制流混淆和变量替换
+function applyAdvancedObfuscation(code, lang) {
+  const randomVar = () => Math.random().toString(36).substr(2, 4);
+  const vars = Array.from({length: 3}, randomVar);
+  
+  let obfuscated = code;
+  vars.forEach(v => {
+    obfuscated = obfuscated.replace(/var/g, v);
+  });
+
+  if (lang === 'js') {
+    obfuscated = `
+      (function() {
+        const ${vars[0]} = [${[...vars].reverse().map(v => `'${v}'`).join(',')}];
+        ${obfuscated}
+      })();
+    `;
+  }
+  
+  return obfuscated;
+}
+
+// 新增混淆选项界面需要更新 HTML
