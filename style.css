@@ -73,6 +73,14 @@ textarea {
   background: var(--background-light);
 }
 
+/* 输出内容可见性修复 */
+.output-container pre {
+  padding: 1.2rem;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
 /* 移动端优化 */
 @media (max-width: 768px) {
   .action-bar {
