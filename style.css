@@ -35,3 +35,9 @@ button {
   border: none;
   font-weight: bold;
 }
+select {
+  background: #222;
+  color: #0f0;
+  border: none;
+  padding: 5px;
+}

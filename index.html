@@ -11,9 +11,18 @@
     <select id="lang">
       <option value="python">Python</option>
       <option value="js">JavaScript</option>
+      <option value="php">PHP</option>
+      <option value="cpp">C++</option>
+    </select>
+    <select id="style">
+      <option value="basic">基础混淆</option>
+      <option value="random">随机混淆</option>
+      <option value="advanced">高级混淆</option>
     </select>
     <button onclick="generate()">生成混淆代码</button>
+    <button onclick="copyToClipboard()">复制代码</button>
     <pre id="output"></pre>
+    <div id="feedback">等待输入...</div>
   </div>
   <script src="script.js"></script>
 </body>
