@@ -1,33 +1,46 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LoveObfuscator</title>
+  <title>LoveObfuscator Pro</title>
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 <body>
-  <!-- 固定操作栏 -->
   <div class="action-bar">
     <div class="grid">
-      <select id="lang">...</select>
-      <select id="style">...</select>
+      <select id="lang">
+        <option value="python">Python</option>
+        <option value="js">JavaScript</option>
+        <option value="php">PHP</option>
+        <option value="cpp">C++</option>
+      </select>
+      <select id="style">
+        <option value="basic">基础混淆</option>
+        <option value="random">随机混淆</option>
+        <option value="advanced">高级混淆</option>
+      </select>
       <div class="button-group">
-        <button onclick="generate()">生成</button>
-        <button onclick="copyToClipboard()">复制</button>
+        <button onclick="generate()">
+          <i class="material-icons">code</i> 生成
+        </button>
+        <button onclick="copyToClipboard()">
+          <i class="material-icons">content_copy</i> 复制
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- 内容区域 -->
   <div class="grid">
     <textarea id="input" placeholder="输入要混淆的内容..."></textarea>
     <div class="output-container">
       <pre id="output"></pre>
+      <div id="loading" class="loading-spinner"></div>
     </div>
-    <div id="feedback">就绪</div>
+    <div id="feedback" class="status-message">就绪</div>
   </div>
+  
+  <script src="script.js"></script>
 </body>
 </html>
