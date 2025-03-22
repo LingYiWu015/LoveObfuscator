@@ -45,8 +45,8 @@ const ObfuscationEngine = {
 const AppController = {
   init: function() {
     // 跨平台事件监听
-    document.getElementById('generateBtn').addEventListener('click', this.generate);
-    document.getElementById('copyBtn').addEventListener('click', this.copyToClipboard);
+    document.getElementById('generateBtn').addEventListener('click', () => this.generate());
+    document.getElementById('copyBtn').addEventListener('click', () => this.copyToClipboard());
     
     // 桌面端快捷键
     document.addEventListener('keydown', (e) => {
@@ -77,11 +77,19 @@ const AppController = {
       feedback.textContent = '生成中...';
       feedback.style.color = '#007AFF';
 
+      // 新增参数映射
+      const methodMap = {
+        basic: 'base64',
+        random: 'hex',
+        advanced: 'unicode'
+      };
+      const method = methodMap[style.value] || 'base64';
+
       // 执行混淆
       const result = ObfuscationEngine.generateForLang(
         cleanText,
         lang.value,
-        style.value
+        method
       );
 
       // 更新界面
