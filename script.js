@@ -84,6 +84,16 @@ function generate() {
   const result = obfuscate(text, lang, style, targetLang);
   document.getElementById("output").innerText = result;
   document.getElementById("loading").style.display = 'none';
+
+  const outputTop = document.getElementById('output').offsetTop;
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
+  
+  if (isMobile) {
+    window.scrollTo({
+      top: outputTop - 80, // 保留操作栏空间
+      behavior: 'smooth'
+    });
+  }
 }
 
 function copyToClipboard() {
