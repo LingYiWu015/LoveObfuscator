@@ -1,3 +1,11 @@
+// 新增混淆类型
+const OBFUSCATION_METHODS = {
+  BASE64: 'base64',
+  HEX: 'hex',
+  UNICODE: 'unicode',
+  VARIABLE_MASK: 'variable-mask',
+  CONTROL_FLOW: 'control-flow'
+};
 
 function obfuscate(text, lang = 'python', style = 'basic', targetLang = 'python') {
   if (style === 'basic') {
@@ -41,39 +49,6 @@ function dynamicCodeObfuscate(text) {
   return `eval(atob('${encoded}'))`;
 }
 
-function advancedObfuscate(text, lang) {
-  let result = reverseLogicObfuscate(text);
-  result = addRedundantCondition(result);
-  return dynamicCodeObfuscate(result);
-}
-
-function generate() {
-  document.getElementById("loading").style.display = 'block';
-  const text = document.getElementById("input").value;
-  const lang = document.getElementById("lang").value;
-  const targetLang = document.getElementById("targetLang").value;
-  const style = document.getElementById("style").value;
-  const result = obfuscate(text, lang, style, targetLang);
-  document.getElementById("output").innerText = result;
-  document.getElementById("loading").style.display = 'none';
-}
-
-function copyToClipboard() {
-  const output = document.getElementById("output").innerText;
-  navigator.clipboard.writeText(output).then(() => {
-    alert('代码已复制到剪贴板！');
-  });
-}
-
-// 新增混淆类型
-const OBFUSCATION_METHODS = {
-  BASE64: 'base64',
-  HEX: 'hex',
-  UNICODE: 'unicode',
-  VARIABLE_MASK: 'variable-mask',
-  CONTROL_FLOW: 'control-flow'
-};
-
 // 加强的混淆核心方法
 function advancedObfuscate(text, lang) {
   let result = '';
@@ -99,6 +74,25 @@ function advancedObfuscate(text, lang) {
   }
   return applyAdvancedObfuscation(result, lang);
 }
+
+function generate() {
+  document.getElementById("loading").style.display = 'block';
+  const text = document.getElementById("input").value;
+  const lang = document.getElementById("lang").value;
+  const targetLang = document.getElementById("targetLang").value;
+  const style = document.getElementById("style").value;
+  const result = obfuscate(text, lang, style, targetLang);
+  document.getElementById("output").innerText = result;
+  document.getElementById("loading").style.display = 'none';
+}
+
+function copyToClipboard() {
+  const output = document.getElementById("output").innerText;
+  navigator.clipboard.writeText(output).then(() => {
+    alert('代码已复制到剪贴板！');
+  });
+}
+
 
 // 应用控制流混淆和变量替换
 function applyAdvancedObfuscation(code, lang) {
