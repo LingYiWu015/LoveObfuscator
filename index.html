@@ -9,49 +9,25 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>LoveObfuscator</h1>
-      <p>跨语言混淆，爱你的方式也可以充满创意！</p>
-    </div>
-    <div class="inputs">
-      <textarea id="input" placeholder="请输入你想要混淆的文字..."></textarea>
-      <div class="language-options">
-        <label for="lang">源语言</label>
-        <select id="lang">
-          <option value="python">Python</option>
-          <option value="js">JavaScript</option>
-          <option value="php">PHP</option>
-          <option value="cpp">C++</option>
-          <option value="ruby">Ruby</option>
-          <option value="go">Go</option>
-        </select>
-        <label for="targetLang">目标语言</label>
-        <select id="targetLang">
-          <option value="python">Python</option>
-          <option value="js">JavaScript</option>
-          <option value="php">PHP</option>
-          <option value="cpp">C++</option>
-          <option value="ruby">Ruby</option>
-          <option value="go">Go</option>
-        </select>
+  <!-- 固定操作栏 -->
+  <div class="action-bar">
+    <div class="grid">
+      <select id="lang">...</select>
+      <select id="style">...</select>
+      <div class="button-group">
+        <button onclick="generate()">生成</button>
+        <button onclick="copyToClipboard()">复制</button>
       </div>
-      <div class="style-options">
-        <label for="style">混淆风格</label>
-        <select id="style">
-          <option value="basic">基础混淆</option>
-          <option value="random">随机混淆</option>
-          <option value="advanced">高级混淆</option>
-        </select>
-      </div>
-      <button onclick="generate()">生成混淆代码</button>
     </div>
-    <div id="loading" class="loading">生成中...</div>
-    <div id="output-container">
+  </div>
+
+  <!-- 内容区域 -->
+  <div class="grid">
+    <textarea id="input" placeholder="输入要混淆的内容..."></textarea>
+    <div class="output-container">
       <pre id="output"></pre>
     </div>
-    <button onclick="copyToClipboard()">复制代码</button>
+    <div id="feedback">就绪</div>
   </div>
-  <script src="script.js"></script>
 </body>
 </html>
