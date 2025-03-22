@@ -1,137 +1,65 @@
-// 新增混淆类型
-const OBFUSCATION_METHODS = {
-  BASE64: 'base64',
-  HEX: 'hex',
-  UNICODE: 'unicode',
-  VARIABLE_MASK: 'variable-mask',
-  CONTROL_FLOW: 'control-flow'
+// 混淆核心模块
+const Obfuscator = {
+  methods: {
+    base64: text => btoa(text),
+    hex: text => Array.from(text).map(c => 
+      `\\x${c.charCodeAt(0).toString(16).padStart(2, '0')}`
+    ).join(''),
+    unicode: text => Array.from(text).map(c => 
+      `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`
+    ).join('')
+  },
+
+  generate: (text, lang, method) => {
+    const encoder = Obfuscator.methods[method];
+    switch(lang) {
+      case 'python':
+        return `exec(__import__('base64').b64decode('${btoa(text)}'))`;
+      case 'js':
+        return `eval("${encoder(text)}")`;
+      case 'php':
+        return `<?php eval(base64_decode('${btoa(text)}')) ?>`;
+      case 'cpp':
+        return `std::cout << "${encoder(text)}";`;
+      default:
+        return 'Unsupported language';
+    }
+  }
 };
 
-function obfuscate(text, lang = 'python', style = 'basic', targetLang = 'python') {
-  if (style === 'basic') {
-    return basicObfuscate(text, lang, targetLang);
-  } else if (style === 'random') {
-    return randomObfuscate(text, lang, targetLang);
-  } else if (style === 'advanced') {
-    return advancedObfuscate(text, lang, targetLang);
-  }
-  return 'Unsupported style';
-}
+// UI控制模块
+const UI = {
+  init: () => {
+    document.addEventListener('keydown', e => {
+      if (e.ctrlKey && e.key === 'Enter') UI.generate();
+    });
+    
+    if ('ontouchstart' in window) {
+      document.querySelector('textarea').focus();
+    }
+  },
 
-function basicObfuscate(text, lang, targetLang) {
-  const arr = Array.from(text).map(c => c.charCodeAt(0));
-  if (targetLang === 'python') {
-    return `print(''.join(map(chr, ${JSON.stringify(arr)})))`;
-  }
-  if (targetLang === 'js') {
-    return `eval(atob('${btoa(text)}'))`;
-  }
-  if (targetLang === 'php') {
-    return `<?php echo chr(${arr.join(').' + 'chr(')}); ?>`;
-  }
-  if (targetLang === 'cpp') {
-    return `std::cout << ${arr.map(c => `char(${c})`).join(' << ')};`;
-  }
-  return 'Unsupported target language';
-}
-
-function reverseLogicObfuscate(text) {
-  let reversed = text.split('').reverse().join('');
-  return `console.log("${reversed}")`;
-}
-
-function addRedundantCondition(text) {
-  return `if (true) { ${text} } else { console.log('Dead code'); }`;
-}
-
-function dynamicCodeObfuscate(text) {
-  let encoded = btoa(text);
-  return `eval(atob('${encoded}'))`;
-}
-
-// 加强的混淆核心方法
-function advancedObfuscate(text, lang) {
-  let result = '';
-  switch(lang) {
-    case 'python':
-      result = `exec(__import__('base64').b64decode('${btoa(text)}').decode())`;
-      break;
-    case 'js':
-      const hexStr = Array.from(text).map(c => 
-        `\\x${c.charCodeAt(0).toString(16).padStart(2, '0')}`
-      ).join('');
-      result = `eval("${hexStr}")`;
-      break;
-    case 'php':
-      result = `<?php eval(base64_decode('${btoa(text)}')); ?>`;
-      break;
-    case 'cpp':
-      const bytes = Array.from(text).map(c => 
-        `static_cast<char>(${c.charCodeAt(0)})`
-      ).join(' << ');
-      result = `std::cout << ${bytes};`;
-      break;
-  }
-  return applyAdvancedObfuscation(result, lang);
-}
-
-function generate() {
-  document.getElementById("loading").style.display = 'block';
-  const text = document.getElementById("input").value;
-  const lang = document.getElementById("lang").value;
-  const targetLang = document.getElementById("targetLang").value;
-  const style = document.getElementById("style").value;
-  const result = obfuscate(text, lang, style, targetLang);
-  document.getElementById("output").innerText = result;
-  document.getElementById("loading").style.display = 'none';
-
-  const outputTop = document.getElementById('output').offsetTop;
-  const isMobile = window.matchMedia("(max-width: 768px)").matches;
-  
-  if (isMobile) {
+  generate: () => {
+    const input = document.getElementById('input').value;
+    const lang = document.getElementById('lang').value;
+    const method = document.getElementById('style').value;
+    const output = Obfuscator.generate(input, lang, method);
+    
+    document.getElementById('output').textContent = output;
     window.scrollTo({
-      top: outputTop - 80, // 保留操作栏空间
+      top: document.getElementById('output').offsetTop - 100,
       behavior: 'smooth'
     });
+  },
+
+  copy: () => {
+    navigator.clipboard.writeText(
+      document.getElementById('output').textContent
+    ).then(() => {
+      alert('代码已复制到剪贴板！');
+    });
   }
-document.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.key === 'Enter') {
-    generate();
-  }
-});
-if ('ontouchstart' in window) {
-  document.getElementById('input').focus();
-}
-}
+};
 
-function copyToClipboard() {
-  const output = document.getElementById("output").innerText;
-  navigator.clipboard.writeText(output).then(() => {
-    alert('代码已复制到剪贴板！');
-  });
-}
-
-
-// 应用控制流混淆和变量替换
-function applyAdvancedObfuscation(code, lang) {
-  const randomVar = () => Math.random().toString(36).substr(2, 4);
-  const vars = Array.from({length: 3}, randomVar);
-  
-  let obfuscated = code;
-  vars.forEach(v => {
-    obfuscated = obfuscated.replace(/var/g, v);
-  });
-
-  if (lang === 'js') {
-    obfuscated = `
-      (function() {
-        const ${vars[0]} = [${[...vars].reverse().map(v => `'${v}'`).join(',')}];
-        ${obfuscated}
-      })();
-    `;
-  }
-  
-  return obfuscated;
-}
-
-// 新增混淆选项界面需要更新 HTML
+// 初始化
+document.addEventListener('DOMContentLoaded', UI.init);
